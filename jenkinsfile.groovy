@@ -1,5 +1,8 @@
 pipeline{
-    agent any
+    agent 
+    {
+        label 'slave'
+    }
     tools
     {
         maven 'Maven'
@@ -14,14 +17,6 @@ pipeline{
                sh 'mvn clean'
            }
        }
-      stage('Build')
-      {
-          steps
-          {   echo "Building"
-              sh 'mvn clean install'
-          }
-      }
-
       stage('test') 
       {
           steps
@@ -30,6 +25,13 @@ pipeline{
               sh 'mvn clean test'
           }
       }
+
       
    }
+   post {
+        always{
+            emailext body: '''$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:
+Check console output at $BUILD_URL to view the results.''', subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!', to: 'rishirai760@gmail.com'
+}
+    }
 }
