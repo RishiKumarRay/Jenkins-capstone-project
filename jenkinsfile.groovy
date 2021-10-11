@@ -21,7 +21,7 @@ pipeline{
       {
           steps
           {   echo "Building"
-              sh 'mvn clean install'
+              sh 'mvn compile'
           }
       }
 
@@ -30,7 +30,7 @@ pipeline{
           steps
           {
               echo "Checking Testcases"
-              sh 'mvn clean test'
+              sh 'mvn test'
           }
       }
       
