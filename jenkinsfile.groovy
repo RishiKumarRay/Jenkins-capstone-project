@@ -11,7 +11,7 @@ pipeline{
        {
            steps 
            {
-               cleanws()
+               sh 'mvn clean'
            }
        }
       stage('Build')
