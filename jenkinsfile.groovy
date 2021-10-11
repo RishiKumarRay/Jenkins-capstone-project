@@ -22,9 +22,18 @@ pipeline{
           steps
           {
               echo "Checking Testcases"
-              sh 'mvn clean test'
+              sh 'mvn test'
           }
       }
+      
+      stage('Package') 
+      {
+          steps
+          {
+              
+              sh 'mvn package'
+          }
+      } 
       
       stage('Deploy')
       {
