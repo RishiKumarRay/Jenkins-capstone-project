@@ -1,3 +1,3 @@
 #!/bin/bash
 cd  source-code
-mvn clean test -f source-code/pom.xml
+mvn clean test -f pom.xml
