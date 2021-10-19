@@ -1,0 +1,95 @@
+---
+resource_types:
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+
+resources:
+- name: source-code
+  type: git
+  source:
+    uri: https://github.com/RishiKumarRay/jenkins-capstone-project
+    branch: Development
+
+- name: notify
+  type: slack-notification
+  source:
+    url: https://hooks.slack.com/services/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
+
+jobs:
+    - name: compile
+      plan:
+        - get: source-code
+          trigger: true
+        - task: compile
+          config:
+             platform: linux
+             image_resource: 
+                  type: docker-image
+                  source: 
+                    repository: maven
+                    tag: 3.6.0-jdk-8-alpine
+
+             inputs:  
+                  - name: source-code
+             run:
+                  path: mvn
+                  args: 
+                   - clean
+                   - compile
+                   - -f
+                   - source-code/pom.xml
+          on_success:
+               put: notify
+               params:
+                 text: "Job 'test' sucess"         
+
+
+    - name: test
+      plan:
+        - get: source-code
+          trigger: true
+          passed: [compile]
+        - task: test
+          config:
+             platform: linux
+             image_resource: 
+                  type: docker-image
+                  source: 
+                    repository: maven
+                    tag: 3.6.0-jdk-8-alpine
+
+             inputs:  
+                  - name: source-code
+             run:
+                  path: mvn
+                  args: 
+                   - clean
+                   - test
+                   - -f
+                   - source-code/pom.xml
+    - name: package
+      plan:
+        - get: source-code
+          trigger: true
+          passed: [test]
+        - task: package
+          config:
+             platform: linux
+             image_resource: 
+                  type: docker-image
+                  source: 
+                    repository: maven
+                    tag: 3.6.0-jdk-8-alpine
+
+             inputs:  
+                  - name: source-code
+             run:
+                  path: mvn
+                  args: 
+                   - clean
+                   - package
+                   - -f
+                   - source-code/pom.xml
+  
