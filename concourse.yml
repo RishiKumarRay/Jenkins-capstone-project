@@ -9,7 +9,7 @@ resources:
 - name: source-code
   type: git
   source:
-    uri: https://github.com/RishiKumarRay/jenkins-capstone-project
+    uri: https://github.com/RishiKumarRay/capstone-project
     branch: Development
 
 - name: notify
